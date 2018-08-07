@@ -23,7 +23,7 @@ func CreateWxUserWhenNoExist(openid string) (*User, error) {
 		return wxUser, nil
 	}
 	wxUser2 = WxUser{WxOpenid: openid}
-	err := AddWxUser(&wxUser2)
+	err = AddWxUser(&wxUser2)
 	if err != nil {
 		return nil, err
 	}

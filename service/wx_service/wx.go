@@ -7,10 +7,12 @@ import (
 	"github.com"
 	"github.com/bitly/go-simplejson"
 	"github.com/freelifer/gohelper/models"
+	"github.com/freelifer/gohelper/pkg/cache"
 	"github.com/freelifer/gohelper/pkg/settings"
 	"github.com/freelifer/gohelper/pkg/utils"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 const (
@@ -43,7 +45,7 @@ func (s *WxService) Login() error {
 	}
 
 	s.SessionId = utils.NewSessionID()
-
+	cache.Put(s.SessionId, wxUser, 60*time.Second)
 	// save [key, value] to radis
 
 	return nil

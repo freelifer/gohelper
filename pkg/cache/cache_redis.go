@@ -4,7 +4,7 @@ package cache
 
 import (
 	"github.com/freelifer/cache"
-	_ "github.com/garyburd/redigo"
+	_ "github.com/freelifer/cache/redis"
 )
 
 var c cache.Cache
