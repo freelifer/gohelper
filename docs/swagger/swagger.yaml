@@ -1,0 +1,52 @@
+info:
+  contact: {}
+  description: An system of gohelper
+  license: {}
+  title: Golang GoHelper API
+  version: "1.0"
+paths:
+  /v1/register:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - default: ""
+        description: 用户名 密码
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 注册
+      tags:
+      - user
+  /v1/tokens:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User
+        in: body
+        name: account
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 登录
+      tags:
+      - user
+swagger: "2.0"
