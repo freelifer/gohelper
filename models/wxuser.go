@@ -8,10 +8,10 @@ import (
 /* 微信用户 */
 type WxUser struct {
 	Id          int64
-	WxOpenid    string        `xorm:"unique"`
-	PasswdInfos []*PasswdInfo `xorm:"-" json:"-"`
-	Created     int64         `xorm:"created"`
-	Updated     int64         `xorm:"updated"`
+	WxOpenid    string            `xorm:"unique"`
+	PasswdInfos []*PasswdInfoBean `xorm:"-" json:"-"`
+	Created     int64             `xorm:"created"`
+	Updated     int64             `xorm:"updated"`
 }
 
 func (u *WxUser) GetUserPasswds() (err error) {
@@ -41,7 +41,7 @@ func ExistWxUserByOpenId(openid string) (bool, error) {
 		return false, nil
 	}
 	var user WxUser
-	_, err := x.Select("id").Where("name = ?", openid).Get(&user)
+	_, err := x.Select("id").Where("wx_openid = ?", openid).Get(&user)
 	if err != nil {
 		return false, err
 	}
