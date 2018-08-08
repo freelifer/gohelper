@@ -2,18 +2,24 @@ package models
 
 import (
 	"encoding/json"
-	"time"
+	"fmt"
 )
 
 /* 微信用户 */
 type WxUser struct {
-	Id       int64
-	WxOpenid string `xorm:"unique"`
-	Created  int64  `xorm:"created"`
-	Updated  int64  `xorm:"updated"`
+	Id          int64
+	WxOpenid    string        `xorm:"unique"`
+	PasswdInfos []*PasswdInfo `xorm:"-" json:"-"`
+	Created     int64         `xorm:"created"`
+	Updated     int64         `xorm:"updated"`
 }
 
-func CreateWxUserWhenNoExist(openid string) (*User, error) {
+func (u *WxUser) GetUserPasswds() (err error) {
+	u.PasswdInfos, err = GetUserPasswdsByWxUserId(u.Id)
+	return err
+}
+
+func CreateWxUserWhenNoExist(openid string) (*WxUser, error) {
 	if len(openid) == 0 {
 		return nil, fmt.Errorf("wxuser openid len is 0")
 	}
@@ -22,7 +28,7 @@ func CreateWxUserWhenNoExist(openid string) (*User, error) {
 	if wxUser != nil {
 		return wxUser, nil
 	}
-	wxUser2 = WxUser{WxOpenid: openid}
+	wxUser2 := WxUser{WxOpenid: openid}
 	err = AddWxUser(&wxUser2)
 	if err != nil {
 		return nil, err
@@ -46,7 +52,7 @@ func ExistWxUserByOpenId(openid string) (bool, error) {
 	return false, nil
 }
 
-func GetWxUserByID(id int64) (*User, error) {
+func GetWxUserByID(id int64) (*WxUser, error) {
 	u := new(WxUser)
 	has, err := x.Id(id).Get(u)
 	if err != nil {
@@ -57,16 +63,16 @@ func GetWxUserByID(id int64) (*User, error) {
 	return u, nil
 }
 
-func GetWxUserByOpenId(openid string) (*User, error) {
+func GetWxUserByOpenId(openid string) (*WxUser, error) {
 	if len(openid) == 0 {
-		return nil, fmt.Errorf("wxuser does not exist [wxuser_id: %d, openid: %s]", 0, name)
+		return nil, fmt.Errorf("wxuser does not exist [wxuser_id: %d, openid: %s]", 0, openid)
 	}
 	u := &WxUser{WxOpenid: openid}
 	has, err := x.Get(u)
 	if err != nil {
 		return nil, err
 	} else if !has {
-		return nil, fmt.Errorf("wxuser does not exist [wxuser_id: %d, name: %s]", 0, name)
+		return nil, fmt.Errorf("wxuser does not exist [wxuser_id: %d, openid: %s]", 0, openid)
 	}
 	return u, nil
 }

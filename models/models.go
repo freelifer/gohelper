@@ -24,7 +24,7 @@ type Model struct {
 }
 
 func init() {
-	tables = append(tables, new(User))
+	tables = append(tables, new(User), new(WxUser), new(PasswdInfo))
 }
 
 func Setup() {
@@ -37,6 +37,10 @@ func Setup() {
 	if err = x.StoreEngine("InnoDB").Sync2(tables...); err != nil {
 		log.Fatalf("sync database struct error: %v\n", err)
 	}
+}
+
+func DropTables() error {
+	return x.DropTables(new(WxUser))
 }
 
 func getEngine() (*xorm.Engine, error) {

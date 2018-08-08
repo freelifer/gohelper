@@ -35,7 +35,7 @@ func RandomString(n int) (string, error) {
 func NewSessionID() string {
 	b := make([]byte, 32)
 	if _, err := io.ReadFull(rand.Reader, b); err != nil {
-		nano := time.Now().UnixNano() //微秒
+		nano := time.Now().UnixNano()
 		return strconv.FormatInt(nano, 10)
 	}
 	return base64.URLEncoding.EncodeToString(b)
@@ -50,7 +50,6 @@ func randomInt(max *big.Int) (int, error) {
 	return int(rand.Int64()), nil
 }
 
-//md5加密
 func MD5(v string) string {
 	md5Obj := md5.New()
 	md5Obj.Write([]byte(v))
@@ -58,7 +57,6 @@ func MD5(v string) string {
 	return hex.EncodeToString(char)
 }
 
-//生成唯一标识
 func Guid() string {
 	c := make([]byte, 32)
 	if _, err := io.ReadFull(rand.Reader, c); err != nil {
