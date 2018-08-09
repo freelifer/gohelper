@@ -32,3 +32,11 @@ func AddIconInfo(i *IconInfo) (err error) {
 
 	return sess.Commit()
 }
+
+func EditIconInfo(icon *IconInfo) (err error) {
+	if _, err = x.Id(icon.Id).Update(icon); err != nil {
+		return err
+	}
+
+	return nil
+}

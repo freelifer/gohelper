@@ -51,11 +51,48 @@ func Test_WxUser(t *testing.T) {
 			So(exist, ShouldEqual, false)
 			So(err, ShouldBeNil)
 		})
-		Convey("GetUserPasswds", func() {
-			u, err := GetWxUserByOpenId("abcdefg")
-			err = u.GetUserPasswds()
-			So(err, ShouldBeNil)
-			t.Log(u.PasswdInfos)
+
+		Convey("User password", func() {
+			Convey("GetUserPasswds no data", func() {
+				u, err := GetWxUserByOpenId("abcdefg")
+				err = u.GetUserPasswds()
+				So(err, ShouldBeNil)
+				t.Log(u.PasswdInfos)
+			})
+			Convey("AddIconInfo", func() {
+				icon := IconInfo{Name: "QQ", Url: "http", Letter: "Q"}
+				err := AddIconInfo(&icon)
+				So(err, ShouldBeNil)
+
+				Convey("EditIconInfo", func() {
+					icon.Url = "https----"
+					t.Log(icon)
+					err := EditIconInfo(&icon)
+					So(err, ShouldBeNil)
+				})
+			})
+			Convey("GetIconInfos", func() {
+				icons, err := GetIconInfos()
+				t.Log(icons)
+				So(err, ShouldBeNil)
+			})
+			Convey("AddPasswdInfo", func() {
+				pwd := PasswdInfo{Uid: 1, IconId: 1, Title: "QQ", Username: "1234", Passwd: "5678"}
+				err := AddPasswdInfo(&pwd)
+				So(err, ShouldBeNil)
+			})
+			Convey("AddPasswdInfo second", func() {
+				pwd := PasswdInfo{Uid: 1, Title: "网易", Username: "1234", Passwd: "5678"}
+				err := AddPasswdInfo(&pwd)
+				So(err, ShouldBeNil)
+			})
+			Convey("GetUserPasswds", func() {
+				u, err := GetWxUserByOpenId("abcdefg")
+				err = u.GetUserPasswds()
+				So(err, ShouldBeNil)
+				t.Log(u.PasswdInfos[0], u.PasswdInfos[1])
+			})
 		})
+
 	})
 }

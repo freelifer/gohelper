@@ -50,7 +50,7 @@ func getUserPasswdsByWxUserId(sess *xorm.Session, userID int64) ([]*PasswdInfoBe
 	sql := `SELECT passwd_info.id, 
 	passwd_info.title, passwd_info.username, 
 	passwd_info.passwd, passwd_info.created, 
-	passwd_info.updated, icon_info.url FROM passwd_info, icon_info`
+	passwd_info.updated, icon_info.url as icon FROM passwd_info, icon_info`
 	return passwds, sess.SQL(sql).Where("`passwd_info`.uid=?", userID).And("`passwd_info.icon_id=?`", "`icon_info`.id").Find(&passwds)
 	// return passwds, sess.Where("uid=?", userID).Find(&passwds)
 }
