@@ -9,8 +9,10 @@ type PasswdInfo struct {
 	Id       int64
 	Uid      int64
 	IconId   int64
+	Unid     int64
+	Icon     string `xorm:"-"`
 	Title    string
-	Username string
+	Username string `xorm:"-"`
 	Passwd   string
 	Created  int64 `xorm:"created"`
 	Updated  int64 `xorm:"updated"`
