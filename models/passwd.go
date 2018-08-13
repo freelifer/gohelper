@@ -28,9 +28,15 @@ type PasswdInfoBean struct {
 	Updated  int64
 }
 
+// 创建新密码信息
+// 根据Unid 判断是否是新的用户名
 func AddPasswdInfo(p *PasswdInfo) (err error) {
 	sess := x.NewSession()
 	defer sess.Close()
+	if p.Unid == 0 {
+		userName, err := CreateUserNameWhenNoExist(p.Uid, UserName)
+		p.Unid = userName.Id
+	}
 	if err = sess.Begin(); err != nil {
 		return err
 	}

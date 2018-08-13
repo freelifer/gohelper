@@ -24,7 +24,7 @@ type Model struct {
 }
 
 func init() {
-	tables = append(tables, new(User), new(WxUser), new(PasswdInfo), new(IconInfo))
+	tables = append(tables, new(User), new(WxUser), new(PasswdInfo), new(IconInfo), new(UserName))
 }
 
 func Setup() {
@@ -41,6 +41,7 @@ func Setup() {
 
 func DropTables() error {
 	return x.DropTables(new(WxUser), new(PasswdInfo), new(IconInfo))
+	// return nil
 }
 
 func getEngine() (*xorm.Engine, error) {
