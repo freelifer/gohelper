@@ -6,10 +6,11 @@ import (
 	"github.com/freelifer/cache"
 )
 
-var c cache.Cache
+var C cache.Cache
 
 func init() {
-	c, err := cache.NewCache("memory", `{"interval":60}`)
+	var err error
+	C, err = cache.NewCache("memory", `{"interval":60}`)
 
 	if err != nil {
 		panic(err)

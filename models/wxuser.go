@@ -8,10 +8,11 @@ import (
 /* 微信用户 */
 type WxUser struct {
 	Id          int64
-	WxOpenid    string            `xorm:"unique"`
-	PasswdInfos []*PasswdInfoBean `xorm:"-" json:"-"`
-	Created     int64             `xorm:"created"`
-	Updated     int64             `xorm:"updated"`
+	WxOpenid    string `xorm:"unique"`
+	Passwd      string
+	PasswdInfos []*PasswdInfo `xorm:"-" json:"-"`
+	Created     int64         `xorm:"created"`
+	Updated     int64         `xorm:"updated"`
 }
 
 func (u *WxUser) GetUserPasswds() (err error) {
@@ -34,6 +35,19 @@ func CreateWxUserWhenNoExist(openid string) (*WxUser, error) {
 		return nil, err
 	}
 	return &wxUser2, nil
+}
+
+func EditWxUserPasswd(id int64, passwd string) (err error) {
+	sess := x.NewSession()
+	defer sess.Close()
+	if err := sess.Begin(); err != nil {
+		return err
+	}
+	if _, err = sess.Exec("UPDATE `wx_user` SET passwd=? WHERE id=?", passwd, id); err != nil {
+		return err
+	}
+
+	return sess.Commit()
 }
 
 func ExistWxUserByOpenId(openid string) (bool, error) {

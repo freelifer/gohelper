@@ -9,23 +9,12 @@ type PasswdInfo struct {
 	Id       int64
 	Uid      int64
 	IconId   int64
-	Unid     int64
 	Icon     string `xorm:"-"`
-	Title    string
-	Username string `xorm:"-"`
-	Passwd   string
-	Created  int64 `xorm:"created"`
-	Updated  int64 `xorm:"updated"`
-}
-
-type PasswdInfoBean struct {
-	Id       int64
-	Icon     string
 	Title    string
 	Username string
 	Passwd   string
-	Created  int64
-	Updated  int64
+	Created  int64 `xorm:"created"`
+	Updated  int64 `xorm:"updated"`
 }
 
 // 创建新密码信息
@@ -33,10 +22,7 @@ type PasswdInfoBean struct {
 func AddPasswdInfo(p *PasswdInfo) (err error) {
 	sess := x.NewSession()
 	defer sess.Close()
-	if p.Unid == 0 {
-		userName, err := CreateUserNameWhenNoExist(p.Uid, UserName)
-		p.Unid = userName.Id
-	}
+
 	if err = sess.Begin(); err != nil {
 		return err
 	}
@@ -48,17 +34,18 @@ func AddPasswdInfo(p *PasswdInfo) (err error) {
 	return sess.Commit()
 }
 
-func GetUserPasswdsByWxUserId(userID int64) ([]*PasswdInfoBean, error) {
+func GetUserPasswdsByWxUserId(userID int64) ([]*PasswdInfo, error) {
 	sess := x.NewSession()
 	return getUserPasswdsByWxUserId(sess, userID)
 }
 
-func getUserPasswdsByWxUserId(sess *xorm.Session, userID int64) ([]*PasswdInfoBean, error) {
-	passwds := make([]*PasswdInfoBean, 0, 10)
-	sql := `SELECT passwd_info.id, 
-	passwd_info.title, passwd_info.username, 
-	passwd_info.passwd, passwd_info.created, 
-	passwd_info.updated, icon_info.url as icon FROM passwd_info, icon_info`
-	return passwds, sess.SQL(sql).Where("`passwd_info`.uid=?", userID).And("`passwd_info.icon_id=?`", "`icon_info`.id").Find(&passwds)
-	// return passwds, sess.Where("uid=?", userID).Find(&passwds)
+func getUserPasswdsByWxUserId(sess *xorm.Session, userID int64) ([]*PasswdInfo, error) {
+	passwds := make([]*PasswdInfo, 0, 10)
+	sql := `SELECT p.id,p.uid,p.title,p.username,p.passwd,p.created,p.updated,i.url as icon
+	FROM passwd_info as p
+	LEFT JOIN icon_info as i
+	ON p.icon_id=i.id
+	WHERE p.uid=?`
+
+	return passwds, sess.SQL(sql, userID).Find(&passwds)
 }

@@ -24,7 +24,7 @@ type Model struct {
 }
 
 func init() {
-	tables = append(tables, new(User), new(WxUser), new(PasswdInfo), new(IconInfo), new(UserName))
+	tables = append(tables, new(User), new(WxUser), new(PasswdInfo), new(IconInfo))
 }
 
 func Setup() {

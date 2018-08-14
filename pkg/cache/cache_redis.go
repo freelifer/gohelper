@@ -7,10 +7,11 @@ import (
 	_ "github.com/freelifer/cache/redis"
 )
 
-var c cache.Cache
+var C cache.Cache
 
 func init() {
-	c, err := cache.NewCache("redis", `{"key":"collectionName","conn":":6039","dbNum":"0","password":"thePassWord"}`)
+	var err error
+	C, err = cache.NewCache("redis", `{"key":"collectionName","conn":":6039","dbNum":"0","password":"thePassWord"}`)
 	if err != nil {
 		panic(err)
 	}

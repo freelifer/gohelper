@@ -3,13 +3,12 @@ package wx_service
 import (
 	"errors"
 	"fmt"
-	"gin/json"
-	"github.com"
 	"github.com/bitly/go-simplejson"
 	"github.com/freelifer/gohelper/models"
 	"github.com/freelifer/gohelper/pkg/cache"
 	"github.com/freelifer/gohelper/pkg/settings"
 	"github.com/freelifer/gohelper/pkg/utils"
+	"github.com/gin-gonic/gin/json"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -34,7 +33,7 @@ type WeiXinData struct {
 }
 
 func (s *WxService) Login() error {
-	data, err := getWxOpenId(settings.WxCfg.Appid, settings.WxCfg.Secret, s.Code)
+	data, err := GetWxOpenId(settings.WxCfg.Appid, settings.WxCfg.Secret, s.Code)
 	if err != nil {
 		return err
 	}
@@ -45,18 +44,19 @@ func (s *WxService) Login() error {
 	}
 
 	s.SessionId = utils.NewSessionID()
-	cache.Put(s.SessionId, wxUser, 60*time.Second)
+	b, _ := json.Marshal(wxUser)
+	cache.Put(s.SessionId, string(b), 60*time.Second)
 	// save [key, value] to radis
 
 	return nil
 }
 
 func Certificate(sessionKey string) error {
-
+	return nil
 }
 
 // From WeiXin Service, Get User's openid and sessionKey
-func getWxOpenId(appid, secret, code string) (*WeiXinData, error) {
+func GetWxOpenId(appid, secret, code string) (*WeiXinData, error) {
 	url := fmt.Sprintf("%s&appid=%s&secret=%s&js_code=%s", wxUrl, appid, secret, code)
 	resp, err := http.Get(url)
 	if err != nil {
