@@ -1,10 +1,7 @@
 package v1
 
 import (
-	"github.com/freelifer/coolgo/app/service"
-	"github.com/freelifer/coolgo/models"
-	"github.com/freelifer/coolgo/pkg/redis"
-	"github.com/freelifer/coolgo/pkg/utils"
+	"github.com/freelifer/gohelper/service/wx_service"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,4 +14,26 @@ import (
 func WeiXinLogin(c *gin.Context) {
 	code := c.Query("code")
 
+	s := wx_service.WxService{Code: code}
+	err := s.Login()
+
+	if err != nil {
+		errorJSON(c, 100, err.Error())
+		return
+	}
+	successJSON(c, gin.H{"session_id": s.SessionId})
+}
+
+func successJSON(c *gin.Context, data interface{}) {
+	c.JSON(http.StatusOK, gin.H{
+		"errcode": 0,
+		"errmsg":  "",
+		"data":    data,
+	})
+}
+func errorJSON(c *gin.Context, errcode int, errmsg string) {
+	c.JSON(http.StatusOK, gin.H{
+		"errcode": errcode,
+		"errmsg":  errmsg,
+	})
 }

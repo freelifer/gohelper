@@ -74,7 +74,6 @@ func GetWxOpenId(appid, secret, code string) (*WeiXinData, error) {
 		return nil, err
 	}
 
-	fmt.Println(js)
 	openid := js.Get("openid").MustString()
 	if len(openid) == 0 {
 		errmsg := js.Get("errmsg").MustString()
