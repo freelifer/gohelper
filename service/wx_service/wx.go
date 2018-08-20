@@ -6,6 +6,7 @@ import (
 	"github.com/bitly/go-simplejson"
 	"github.com/freelifer/gohelper/models"
 	"github.com/freelifer/gohelper/pkg/cache"
+	"github.com/freelifer/gohelper/pkg/e"
 	"github.com/freelifer/gohelper/pkg/settings"
 	"github.com/freelifer/gohelper/pkg/utils"
 	"github.com/gin-gonic/gin/json"
@@ -19,7 +20,7 @@ const (
 )
 
 var (
-	WX_LOGIN_UNKNOW error = errors.New("wx error unknow")
+	WX_LOGIN_UNKNOW error = errors.New("wx errmsg unknow")
 )
 
 type WxService struct {
@@ -32,15 +33,15 @@ type WeiXinData struct {
 	Openid     string
 }
 
-func (s *WxService) Login() error {
+func (s *WxService) Login() e.Err {
 	data, err := GetWxOpenId(settings.WxCfg.Appid, settings.WxCfg.Secret, s.Code)
 	if err != nil {
-		return err
+		return e.NewInnerErr(err.Error())
 	}
 
-	wxUser, err := models.CreateWxUserWhenNoExist(data.Openid)
-	if err != nil {
-		return err
+	wxUser, e := models.CreateWxUserWhenNoExist(data.Openid)
+	if e != nil {
+		return e
 	}
 
 	s.SessionId = utils.NewSessionID()

@@ -3,6 +3,7 @@ package models
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/freelifer/gohelper/pkg/e"
 )
 
 /* 微信用户 */
@@ -20,19 +21,19 @@ func (u *WxUser) GetUserPasswds() (err error) {
 	return err
 }
 
-func CreateWxUserWhenNoExist(openid string) (*WxUser, error) {
+func CreateWxUserWhenNoExist(openid string) (*WxUser, e.Err) {
 	if len(openid) == 0 {
-		return nil, fmt.Errorf("wxuser openid len is 0")
+		return nil, e.WX_OPENID_EMPTY
 	}
 
-	wxUser, err := GetWxUserByOpenId(openid)
+	wxUser, _ := GetWxUserByOpenId(openid)
 	if wxUser != nil {
 		return wxUser, nil
 	}
 	wxUser2 := WxUser{WxOpenid: openid}
-	err = AddWxUser(&wxUser2)
+	err := AddWxUser(&wxUser2)
 	if err != nil {
-		return nil, err
+		return nil, e.NewInnerErr(err.Error())
 	}
 	return &wxUser2, nil
 }

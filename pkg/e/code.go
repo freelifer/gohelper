@@ -10,3 +10,8 @@ const (
 
 	ERROR_INVALID_PARAMS = 10001
 )
+
+var (
+	WX_CODE_EMPTY   = New(ERROR_INVALID_PARAMS, "WX Code Empty")
+	WX_OPENID_EMPTY = New(ERROR_INVALID_PARAMS, "WX Openid Empty")
+)

@@ -21,9 +21,16 @@ func Run() {
 
 	g1 := r.Group("/v1")
 	{
+		g1.GET("/wxlogin", v1.WeiXinLogin)
 		// user
 		g1.POST("/tokens", v1.Login)
 		g1.POST("/register", v1.Register)
+
+		// password
+		g1.GET("/passwds", v1.PasswdList)
+		g1.GET("/passwds/:id", v1.GetPasswd)
+		g1.POST("/passwds", v1.AddPasswd)
+		g1.PUT("/passwds/:id", v1.EditPasswd)
 
 		// project
 		// g1.POST("/projects", postProject)

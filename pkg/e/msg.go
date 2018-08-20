@@ -2,7 +2,7 @@ package e
 
 var MsgFlags = map[int]string{
 	SUCCESS:              "ok",
-	INNER_ERROR:          "fail",
+	INNER_ERROR:          "inner error",
 	ERROR_INVALID_PARAMS: "请求参数错误",
 }
 
@@ -12,5 +12,5 @@ func GetMsg(code int) string {
 		return msg
 	}
 
-	return MsgFlags[ERROR]
+	return MsgFlags[INNER_ERROR]
 }
